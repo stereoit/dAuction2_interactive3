@@ -90,6 +90,7 @@
             </div>
         </div>
 
+        {% if id_in_group == 1 %}
         <div class="theoretical_predictions_button_container" id="theoretical_predictions_button_container">
                 <!-- Showing All transactions -->
             {% include 'dAuction2\stop_button.html' %}
@@ -99,10 +100,13 @@
                 {% include 'dAuction2\theoretical_predictions_button.html' %}
             </div>
         </div>
+        {% endif %}
     </div>
 
 
     <div id="spacing_horizontal"></div>
+
+
 
     <!-- Showing All transactions -->
     <div id="theoretical_predictions">
