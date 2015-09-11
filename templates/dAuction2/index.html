@@ -1,0 +1,22 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Experiment!!</title>
+        <link rel="stylesheet" href="//cdn.pydata.org/bokeh/release/bokeh-0.9.2.min.css" type="text/css" />
+        <script type="text/javascript" src="//cdn.pydata.org/bokeh/release/bokeh-0.9.2.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="{% static 'dAuction2/style.css' %}" />
+        <script src="{% static "js/jquery-2.1.4.min.js" %}"></script>
+        <script src="{% static "js/dAuction2-jquery.js" %}"></script>
+
+
+    </head>
+
+<body>
+<div id="container2">
+    {% include 'dAuction2\content.html' %}
+</div> <!-- id container2 -->
+<div id="test"></div>
+</body>
+</html>

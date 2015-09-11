@@ -1,0 +1,76 @@
+
+    <div id="my_vouchers_inside_row1">
+        <div id="my_vouchers_inside_row1_cell">
+            <div class="title">
+                {% if player.role == "PR" %}
+                        <td class= "SELL">Production Cost</td>
+                    {% else %}<td class="BUY">Earnings</td>
+                    {% endif %}
+            </div>
+
+            <table style="width:150px; height:450px" >
+                <tr class="units">
+                    <td><b>id</b></td>
+                    <td><b>cumm.</b></td>
+                    <td><b>{{ player.name }}</b> </td>
+                    {% if player.role == "PR" %}
+                        <td class= "SELL">
+                    {% else %}<td class="BUY">
+                    {% endif %}
+                    <b>used</b> </td>
+                </tr>
+
+            {% for voucher in vouchers %}
+                <tr>
+                    <td class="units"> {{ voucher.idd }} </td>
+                    <td class="units"> {{ voucher.value_cum }} </td>
+                    <td class="units"> <div id="value">{{ voucher.value}}</div> </td>
+                    {% if voucher.used == True %}
+                        <td class="units"><div id="value">x</div> </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </table>
+        </div>
+
+        <div id="my_vouchers_inside_row1_cell">
+            <div class="title">Trading Account</div>
+            <table style="width:150px;" >
+                <tr class="units">
+                    <td><b>id</b></td>
+                    <td><b>total</b> </td>
+                    <td>    <b>units</b> </td>
+                    <td><b>price</b> </td>
+
+                </tr>
+                {% for offer in myOffers_inv %}
+                    {% if offer.type == "SELL" %}<tr class= "SELL" class="units"> {% else %}<tr class="BUY" class="units"> {% endif %}
+                        <td class="units"> {{ offer.id }} </td>
+                        <td class="units"> <div id="price">{{ offer.product }}</div> </td>
+                        <td class="units"> <div id="units">{{ offer.unitsCleared }}</div> </td>
+                        <td class="units"> <div id="price">{{ offer.priceCleared }}</div> </td>
+
+                <!--           <td class="units"> <div id="sell">{{ offer.type }}</div> </td> -->
+                        </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div id="my_vouchers_inside_row2">
+            <div id="my_vouchers_inside_row2_cell">
+                <div class="mybold">
+                    {% if player.role == "PR" %}
+                        Total Cost: <br> {{ player.total_cost }}
+                    {% else %}
+                        Total Earnings: <br> {{ player.total_values }}
+                    {% endif %}
+                <br>
+                <br>
+               <div class="mybold">PROFIT: {{ player.profit }}</div>
+
+                </div>
+            </div>
+            <div id="my_vouchers_inside_row2_cell">
+                <div class="mybold">Trading Results:<br> {{ player.trading_result }}</div>
+            </div>
+        </div>
+    </div>

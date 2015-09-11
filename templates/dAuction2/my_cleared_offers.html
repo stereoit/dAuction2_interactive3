@@ -1,0 +1,16 @@
+        <!-- Showing all MY CLEArED offers -->
+        <div class="title">My cleared offers</div>
+        <div class="scrolltable">
+            <table style="width:280px;" >
+            <tr class="units"> <td><b>id</b></td>   <td><b>price</b> </td> <td><b>units</b> </td><td><b>SELL or BUY</b> </td></tr>
+            {% for offer in myOffers %}
+                {% if offer.type == "SELL" %}<tr class= "SELL" class="units"> {% else %}<tr class="BUY" class="units"> {% endif %}
+                    <td class="units"> {{ offer.id }} </td>
+                    <td class="units"> <div id="price">{{ offer.price }}</div> </td>
+                    <td class="units"> <div id="units">{{ offer.initUnits }}</div> </td>
+                    <td class="units"> <div id="sell">{{ offer.type }}</div> </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+

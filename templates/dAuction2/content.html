@@ -1,0 +1,127 @@
+{% load staticfiles %}
+
+
+
+
+<div id="spacing"></div>
+
+
+<div id="columns1">
+    <div id="my_vouchers">
+           <!-- Showing all values -->
+        {% include 'dAuction2\my_vouchers.html' %}
+    </div>
+
+
+
+</div> <!-- id columns2 -->
+
+<div id="spacing"></div>
+
+<div id="columns2">
+    <div id="c13">
+    <!-- Error message for when player doesnt fill out price or units -->
+        {% if messages %}
+            Your offer was not processed:
+            <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    <!-- The form submitting price and units and SELL/BUY -->
+        <div class="title">Submit an offer</div>
+    <!--        <form id="setOfferForm" method="post" action="/dAuction2/set_offer/"> -->
+        <table>
+            <tr>
+                <td>Number of units:</td>
+                <td> <input id="unitsInput" class="unitAndPriceInput" type="number" name="unitsInput" min="1" max="10" value="2" maxlength="4" required></td>
+            </tr>
+            <tr>
+                <td>Price per unit:</td>
+                <td><input id="priceInput" class="unitAndPriceInput" type="number" name="priceInput" min="1" max="9999" value="10" maxlength="4" required></td>
+            </tr>
+            <tr>
+                <td> I want to:</td>
+                <td><input type="submit" id="btnSell" class="btnSell" name="typeBtn" value="SELL" ><input type="submit" class="btnBuy" id="btnBuy" name="typeBtn" value="BUY">  </td>
+            </tr>
+        </table>
+        <input  id= "group_idInput" name="group_idInput"  value="{{ player.group }}">
+        <input  id= "id_in_groupInput" name="id_in_groupInput" value="{{ player }}">
+
+    <!-- Showing MY standing offer -->
+        <br>
+        <div id="my_standing_offer">
+            {% include 'dAuction2\my_standing_offer.html' %}
+        </div>
+        <input type="submit" id="Cancel" class="Cancel" name="typeBtn" value="Cancel" >
+
+    </div>
+
+
+    <div class="all_standing_market_offers_container" id="all_standing_market_offers_container">
+        <div id="all_standing_market_offers">
+            {% include 'dAuction2\all_standing_market_offers.html' %}
+        </div>
+    </div>
+
+
+
+
+</div> <!-- id columns -->
+
+<div id="spacing"></div>
+
+<div id="columns3">
+
+    <div class="c24" id="c24">
+            <!-- Showing All transactions -->
+        <div id="all_transactions">
+           {% include 'dAuction2\all_transactions.html' %}
+        </div>
+    </div>
+
+    <div class="all_transactions_text_container2" id="all_transactions_text_container2">
+
+        <div class="all_transactions_text_container" id="all_transactions_text_container">
+                <!-- Showing All transactions -->
+            <div id="all_transactions_text">
+                {% include 'dAuction2\all_transactions_text.html' %}
+            </div>
+        </div>
+
+        <div class="theoretical_predictions_button_container" id="theoretical_predictions_button_container">
+                <!-- Showing All transactions -->
+            {% include 'dAuction2\stop_button.html' %}
+            <br>
+            <br>
+            <div id="theoretical_predictions_button">
+                {% include 'dAuction2\theoretical_predictions_button.html' %}
+            </div>
+        </div>
+    </div>
+
+
+    <div id="spacing_horizontal"></div>
+
+    <!-- Showing All transactions -->
+    <div id="theoretical_predictions">
+        {% if Constants.show_theory %}
+            <div class="theoretical_predictions_container" id="theoretical_predictions_container">
+                {% include 'dAuction2\theoretical_predictions.html' %}
+            </div>
+        {% endif %}
+    </div>
+
+
+
+            <!-- Showing All transactions -->
+    <div id="theoretical_predictions_text">
+        {% if Constants.show_theory %}
+            <div class="theoretical_predictions_text_container" id="theoretical_predictions_text_container">
+                {% include 'dAuction2\theoretical_predictions_text.html' %}
+            </div>
+        {% endif %}
+    </div>
+
+</div> <!-- id columns3 -->

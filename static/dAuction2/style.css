@@ -1,0 +1,322 @@
+
+.plotdiv  {
+    height:100px;
+    width:100px;}
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header,  menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1
+    background-color: red;
+}
+ol, ul {
+	line-height: 1;
+    margin: 0;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+
+
+
+
+.setOfferTable{background: white;}
+.btnSell {
+    background-color:#fba0a0;
+    cursor:pointer;font-weight: 900; font-size: 110%;
+}
+
+.btnBuy {
+    background-color:#c6effb;
+    cursor:pointer;font-weight: 900; font-size: 110%;
+}
+
+.unitAndPriceInput {
+    width: 90px;
+}
+
+.messages{
+    magin:0;
+}
+
+#header {
+    width: 100%;
+    background-color: red;
+    height: 30px;
+}
+
+#container3 {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    margin: auto;
+
+}
+
+#spacing {
+    width: 10px;
+    float: left;
+    height: 600px;
+    background-color: black;
+    padding: 0px;
+    border-style: none;
+}
+
+
+
+#columns1 {
+    width: 420px;
+    float: left;
+    height: 900px;
+    padding: 0px;
+    border-style: none;
+}
+
+#columns2 {
+    width: 320px;
+    float: left;
+    height: 900px;
+    padding: 0px;
+    border-style: none;
+}
+#columns3 {
+    width: 1000px;
+    float: left;
+    height: 900px;
+    padding: 0px;
+    border-style: none;
+}
+
+
+#my_vouchers {
+    width: 400px;
+    float: left;
+    height: 925px;
+    background-color: WhiteSmoke;
+    padding: 5px;
+    border-style: none;
+
+}
+
+
+
+#my_vouchers_inside_row1 {
+    width: 395px;
+    float: left;
+    height: 840px;
+    background-color: WhiteSmoke;
+    padding: 2px;
+    border-style: none;
+}
+
+    #my_vouchers_inside_row1_cell {
+        width: 190px;
+        float: left;
+        height: 840px;
+        background-color: WhiteSmoke;
+        padding: 2px;
+        border-style: none;
+    }
+
+#my_vouchers_inside_row2 {
+    width: 395px;
+    float: left;
+    height: 50px;
+    background-color: WhiteSmoke;
+    padding: 2px;
+    border-style: none;
+}
+    #my_vouchers_inside_row2_cell {
+        width: 190px;
+        float: left;
+        height: 50px;
+        background-color: WhiteSmoke;
+        padding: 2px;
+        border-style: none;
+    }
+
+#c13 {
+    width: 300px;
+    float: left;
+    height: 257px;
+    background-color: WhiteSmoke;
+    padding: 5px;
+    border-style: solid;
+    border-width: 3px;
+
+}
+#all_standing_market_offers_container {
+    width: 300px;
+    float: left;
+    height: 650px;
+    background-color: WhiteSmoke;
+    padding: 5px;
+    border-style: solid;
+    border-width: 3px;
+}
+
+#all_transactions_digital {
+    width: 300px;
+    float: left;
+    height: 297px;
+    background-color: WhiteSmoke;
+    padding: 5px;
+    border-style: solid;
+    border-width: 3px;
+}
+#my_cleared_offers {
+    width: 300px;
+    float: left;
+    height: 294px;
+    background-color: WhiteSmoke;
+    padding: 5px;
+    border-style: solid;
+    border-width: 3px;
+}
+
+#c23 {
+    width: 300px;
+    float: left;
+    height: 294px;
+    background-color: WhiteSmoke;
+    padding: 5px;
+    border-style: solid;
+    border-width: 3px;
+}
+
+#c24 {
+    width: 930px;
+    float: left;
+    height: 394px;
+    background-color: WhiteSmoke;
+    padding: 5px;
+    border-style: solid;
+    border-width: 3px;
+}
+
+#all_transactions_text_container2 {
+    width: 930px;
+    float: left;
+    height: 95px;
+    background-color: black;
+    padding: 0px;
+    border-style: none;
+}
+#spacing_horizontal {
+    width: 930px;
+    float: left;
+    height: 20px;
+    background-color: black;
+    padding: 0px;
+    border-style: none;
+}
+
+#theoretical_predictions_container {
+    width: 930px;
+    float: left;
+    height: 294px;
+    background-color: orange;
+    padding: 5px;
+    border-style: solid;
+    border-width: 3px;
+}
+
+#theoretical_predictions_text_container {
+    width: 450px;
+    float: left;
+    height: 90px;
+    background-color: orange;
+    padding: 5px;
+    border-style: solid;
+    border-width: 3px;
+}
+
+
+#all_transactions_text_container {
+    width: 450px;
+    float: left;
+    height: 90px;
+    background-color: WhiteSmoke;
+    padding: 5px;
+    border-style: solid;
+    border-width: 3px;
+}
+
+#theoretical_predictions_button_container {
+    width: 300px;
+    float: right;
+    height: 90px;
+    background-color: black;
+    padding: 5px;
+    border-style: solid;
+    border-width: 3px;
+}
+
+
+#clear {
+    clear: both;
+
+}
+
+html, body, form, fieldset, table, tr, td, img .btnSell {}
+
+.title {font-weight: 900;text-align: center; width:inherit;}
+.mybold {font-weight: 900;text-align: left; width:inherit;}
+.SELL {background-color: #fba0a0;text-align: center;}
+.BUY {background-color: #c6effb;text-align: center;}
+.cSELL {background-color: #fba0a0;text-align: center;font-style: italic;font-weight: 900;font-size: 110%;}
+.cBUY {background-color: #c6effb;text-align: center;font-style: italic;font-weight: 900;font-size: 110%;}
+.SELLb {background-color: #fba0a0;text-align: center;font-weight: 900;font-size: 110%;}
+.BUYb {background-color: #c6effb;text-align: center;font-weight: 900;font-size: 110%;}
+.theoretical_predictions_button {background-color: orange;text-align: center;font-weight: 900;font-size: 100%;}
+.stop_button {background-color: red;text-align: center;font-weight: 900; font-size: 100%;}
+
+.units {background-color:inherit;text-align: right;}
+
+.scrolltable {
+    height:294px;
+    width:296px;
+    position:relative;
+    overflow: scroll;
+    overflow: auto;
+    margin: 0;
+    padding: 5px;  }
+
+html, body {
+    height: 100%;
+    background-color: black;
+}

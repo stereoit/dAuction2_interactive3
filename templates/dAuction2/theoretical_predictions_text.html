@@ -1,0 +1,43 @@
+<table>
+    <tr>
+        <td style="width: 100px;">Price:</td>
+        <td style="width: 130px;">Units produced:</td>
+        <td>Your possible profit:</td>
+    </tr>
+    <tr>
+        <td><li>
+            {% if Constants.sd_price_min == Constants.sd_price_max %}
+                {{ Constants.sd_price_min }}
+            {%  else %}
+                {{ Constants.sd_price_min }} - {{ Constants.sd_price_max }}
+            {%  endif %}
+        </li></td>
+        <td><li>{{ Constants.sd_units }}</li></td>
+        <td><li>            {% if Constants.stop or True %}
+            {{ Constants.my_profit_th }}
+        {% endif %}
+            </li></td>
+
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td><li>
+            {% if Constants.stop or True %}
+                your score is: {{ Constants.my_score }}%
+            {% endif %}
+        </li></td>
+
+</table>
+ {% if Constants.stop %}
+    <id class="title">You are {% if Constants.my_score > 100 %}
+        an excellent
+            {%  elif Constants.my_score > 90 %}
+        a very good
+            {%  elif Constants.my_score > 80 %}
+        a mediocre
+            {%  else %}
+        a very poor
+            {%  endif %}
+    trader!</id>
+{% endif %}
