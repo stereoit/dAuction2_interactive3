@@ -52,15 +52,15 @@
 
 
 
-        var auto_refresh2 = setInterval
-        (
-            function () {
-                $.get('dAuction2/refresh2/', function (data) {});
-                $.get('dAuction2/refresh2/', function (data) {});
+//        var auto_refresh2 = setInterval
+//        (
+//            function () {
+//                $.get('dAuction2/refresh2/', function (data) {});
+//                $.get('dAuction2/refresh2/', function (data) {});
 
-            }
-            , 2000
-        );
+//            }
+//            , 2000
+//        );
         var auto_refresh = setInterval
         (
             function () {
