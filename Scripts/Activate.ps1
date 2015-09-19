@@ -27,14 +27,14 @@ function global:deactivate ([switch]$NonDestructive) {
 
 deactivate -nondestructive
 
-$env:VIRTUAL_ENV="D:\_sss\WORK\dAuction2_interactive3"
+$env:VIRTUAL_ENV="C:\Users\MSIS\untitled"
 
 # Set the prompt to include the env name
 # Make sure _OLD_VIRTUAL_PROMPT is global
 function global:_OLD_VIRTUAL_PROMPT {""}
 copy-item function:prompt function:_OLD_VIRTUAL_PROMPT
 function global:prompt {
-    Write-Host -NoNewline -ForegroundColor Green '(dAuction2_interactive3) '
+    Write-Host -NoNewline -ForegroundColor Green '(untitled) '
     _OLD_VIRTUAL_PROMPT
 }
 

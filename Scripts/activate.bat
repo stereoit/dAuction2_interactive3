@@ -1,5 +1,5 @@
 @echo off
-set "VIRTUAL_ENV=D:\_sss\WORK\dAuction2_interactive3"
+set "VIRTUAL_ENV=C:\Users\MSIS\untitled"
 
 if not defined PROMPT (
     set "PROMPT=$P$G"
@@ -14,7 +14,7 @@ if defined _OLD_VIRTUAL_PYTHONHOME (
 )
 
 set "_OLD_VIRTUAL_PROMPT=%PROMPT%"
-set "PROMPT=(dAuction2_interactive3) %PROMPT%"
+set "PROMPT=(untitled) %PROMPT%"
 
 if defined PYTHONHOME (
     set "_OLD_VIRTUAL_PYTHONHOME=%PYTHONHOME%"

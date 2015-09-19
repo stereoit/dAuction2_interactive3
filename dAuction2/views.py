@@ -169,7 +169,7 @@ def cummulator(listt):
 
 def median_value(queryset,term):
     if queryset:
-        print(" inside if", queryset)
+        #print(" inside if", queryset)
         count = queryset.count()
         return queryset.values_list(term, flat=True).order_by(term)[int(round(count/2))]
     else:
@@ -177,7 +177,7 @@ def median_value(queryset,term):
 
 def median_value10(queryset,term):
     if queryset:
-        print(" inside if", queryset)
+        #print(" inside if", queryset)
         count = queryset.count()
         count2=min(count,10)
         id_include=max(1,count-10)
@@ -223,11 +223,11 @@ def index_calculations(group_id, id_in_group):
         average_price=int(round(trans_list2.aggregate(Avg('price'))["price__avg"]))
         average_price_last10transactions=int(round(trans_list2.filter(id__gte=id_include).aggregate(Avg('price'))["price__avg"]))
 
-        print("id_include",id_include)
-        print("trans_list2.filter(id__gte=id_include)",trans_list2)
-        print("average_price",trans_list2.aggregate(Avg('price')))
-        print("trans_list2.filter(id__gte=id_include)",trans_list2.filter(id__gte=id_include))
-        print("average_price_last10transactions",trans_list2.filter(id__gte=id_include).aggregate(Avg('price')))
+        #print("id_include",id_include)
+        #print("trans_list2.filter(id__gte=id_include)",trans_list2)
+        ##print("average_price",trans_list2.aggregate(Avg('price')))
+        #print("trans_list2.filter(id__gte=id_include)",trans_list2.filter(id__gte=id_include))
+        #print("average_price_last10transactions",trans_list2.filter(id__gte=id_include).aggregate(Avg('price')))
         #units2= trans_list2.aggregate(Sum('units'))
         units=round(int(trans_list2.aggregate(Sum('units'))["units__sum"]))
         #print("AFTER  median_price")
@@ -317,9 +317,6 @@ def index_calculations(group_id, id_in_group):
     transaction_price=none_to_zero(transaction_price)
     transaction_bprice=none_to_zero(transaction_bprice)
     transaction_sprice=none_to_zero(transaction_sprice)
-
-
-
 
 
 
@@ -850,7 +847,8 @@ def set_offer(request,group_id, id_in_group,valUnits,valPrice,valType):
                 setproducts(c,p,first,first_player)
                 #print("before try, first",first)
                 #6. set vouchers
-                set_voucher(p,first,first.unitsCleared)  # The vouchers are ticked
+                #set_voucher(p,first,first.unitsCleared)  # The vouchers are ticked
+                set_voucher(p,first_player,first,c.unitsCleared)    # The vouchers are ticked
 
                 offer_list3 = offer_list.exclude(cleared=True)   # update the list of remaining counter-offers
                 print(offer_list3)
@@ -890,13 +888,13 @@ def set_offer(request,group_id, id_in_group,valUnits,valPrice,valType):
                 #calculate production costs or buyers values
                 #6. set vouchers
                 print("1st setvoucher call")
-                set_voucher(p,first,c.unitsCleared)    # The vouchers are ticked
+#                set_voucher(p,first,c.unitsCleared)    # The vouchers are ticked
+                set_voucher(p,first_player,first,c.unitsCleared)    # The vouchers are ticked
                 #print("After set_voucher(p,first,c.unitsCleared)")
                 #print("After clear_c(c,first)  # clear c (as first.unitsA>c.unitsA)")
                 first.save()
                 f2.save()
                 #print("f2.save()")
-
 
             elif first is not None and c.unitsAvailable == first.unitsAvailable:
                 first_player=first.player
@@ -919,7 +917,8 @@ def set_offer(request,group_id, id_in_group,valUnits,valPrice,valType):
                 #print("1st setvoucher call")
 
                 #6. set vouchers
-                set_voucher(p,first,c.unitsCleared)    # The vouchers are ticked
+                #def set_voucher(p,first_player,first,unitsCleared)
+                set_voucher(p,first_player,first,c.unitsCleared)    # The vouchers are ticked
 
         else:
             if valUnits=='':
@@ -945,10 +944,10 @@ def set_offer(request,group_id, id_in_group,valUnits,valPrice,valType):
         #state.save()
         return request
 
-def set_voucher(p,first,unitsCleared):
+def set_voucher(p,first_player,first,unitsCleared):
     # first treat the vouchers of the present bidder (p)
     print("BEGIN set_voucher(p,first,unitsCleared):",p,first,unitsCleared)
-    first_player=first.player
+    #first_player=first.player
     tel_p=Voucher.objects.filter(player=p, used=True).count()
     tel_all_p=Voucher.objects.filter(player=p).count()
     negative_p=35-tel_all_p
@@ -969,7 +968,7 @@ def set_voucher(p,first,unitsCleared):
         # thus p is a REtailer, and the counterparty sold, so REtailer p bought
         # or p is a PRoducer, and the counterparty bought, so PRoducer p sold
         # standard case
-        print("standard case")
+        print("standard case for p")
         #  treat the vouchers of the party (p)
         for i in range(tel_p+negative_p,unitsCleared+tel_p+negative_p):
             #print("vv=Voucher.objects.filter(player=p,idd=i+1)")
@@ -987,25 +986,65 @@ def set_voucher(p,first,unitsCleared):
 
         #  treat the vouchers of the counterparty (first.player)
         print("2nd... setvoucher call")
-        for i in range(tel_f+negative_f,unitsCleared+tel_f+negative_f):
-            vv2=Voucher.objects.get(player=first_player,idd=i+1)
-            vv2.price=first.priceCleared
-            vv2.used=True
-            #print("if p.role==PR:")
-            vv2.save()
-        set_total_cost_value(first_player,vv2.value_cum)
-        print("first_player,vv2.value_cum",first_player,vv2.value_cum)
+        #ToDo
+        #must check if it is standard case for first_player or not
+        if (first_player.role=="RE" and first.type=="BUY") or (first_player.role=="PR" and first.type=="SELL"):
+            # thus fp is a REtailer, and bought
+            # or fp is a PRoducer, and sold
+            # standard case
+            print("standard case for first_player")
+
+            for i in range(tel_f+negative_f,unitsCleared+tel_f+negative_f):
+                vv2=Voucher.objects.get(player=first_player,idd=i+1)
+                vv2.price=first.priceCleared
+                vv2.used=True
+                #print("if p.role==PR:")
+                vv2.save()
+            set_total_cost_value(first_player,vv2.value_cum)
+            print("first_player,vv2.value_cum",first_player,vv2.value_cum)
+        else:
+            # thus first_player is a REtailer, and the counterparty bought, so REtailer first_player sold
+            # or first_player is a PRoducer, and the counterparty sold, so PRoducer first_player bought
+            # reversed case
+            print("2nd setvoucher call")
+            print("reversed case for for first_player")
+            v=create_and_cut_vouchers(first_player,p,first,unitsCleared)
+            set_total_cost_value(first_player,v.value_cum-v.value)
     else:
         # thus p is a REtailer, and the counterparty bought, so REtailer p sold
         # or p is a PRoducer, and the counterparty sold, so PRoducer p bought
         # reversed case
-        print("reversed case")
+        print("reversed case for p")
         v=create_and_cut_vouchers(p,p,first,unitsCleared)
         set_total_cost_value(p,v.value_cum-v.value)
+
         # second, treat the vouchers of the counterparty (first.player)
         print("2nd setvoucher call")
-        v=create_and_cut_vouchers(first_player,p,first,unitsCleared)
-        set_total_cost_value(first_player,v.value_cum-v.value)
+        #must check if it is standard case for first_player or not
+        if (first_player.role=="RE" and first.type=="BUY") or (first_player.role=="PR" and first.type=="SELL"):
+            # thus fp is a REtailer, and bought
+            # or fp is a PRoducer, and sold
+            # standard case
+            print("standard case for first_player")
+
+            for i in range(tel_f+negative_f,unitsCleared+tel_f+negative_f):
+                vv2=Voucher.objects.get(player=first_player,idd=i+1)
+                vv2.price=first.priceCleared
+                vv2.used=True
+                #print("if p.role==PR:")
+                vv2.save()
+            set_total_cost_value(first_player,vv2.value_cum)
+            print("first_player,vv2.value_cum",first_player,vv2.value_cum)
+        else:
+            # thus first_player is a REtailer, and the counterparty bought, so REtailer first_player sold
+            # or first_player is a PRoducer, and the counterparty sold, so PRoducer first_player bought
+            # reversed case
+            print("2nd setvoucher call")
+            print("reversed case for for first_player")
+            v=create_and_cut_vouchers(first_player,p,first,unitsCleared)
+            set_total_cost_value(first_player,v.value_cum-v.value)
+
+
     print("END set_voucher(p,first,unitsCleared):",p,first,unitsCleared)
 
 
@@ -1091,5 +1130,3 @@ def create_transaction(c,first):
     t.save()
     print("END create_transaction(c,first):",c,first)
     return(t)
-
-
