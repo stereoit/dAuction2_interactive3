@@ -1011,7 +1011,7 @@ def set_voucher(p,first_player,first,unitsCleared):
             v=create_and_cut_vouchers(first_player,p,first,unitsCleared)
             set_total_cost_value(first_player,v.value_cum-v.value)
     else:
-        # thus p is a REtailer, and the counterparty bought, so REtailer p sold
+        # thus p i s a REtailer, and the counterparty bought, so REtailer p sold
         # or p is a PRoducer, and the counterparty sold, so PRoducer p bought
         # reversed case
         print("reversed case for p")
