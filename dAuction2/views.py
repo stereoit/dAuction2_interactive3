@@ -16,6 +16,7 @@ from bokeh.plotting import figure, output_file, show
 #from bokeh.resources import CDN
 from bokeh.embed import components
 import time
+from django.db.models import Avg,Sum
 
 
 # Functions I use here:
@@ -123,12 +124,13 @@ def createPlayer(g, id_in_group,role):
     p = Player.objects.get_or_create(group=g,id_in_group=id_in_group)[0]
     #c = Constants()
     print("CREATEPLAYER!!! for:",p)
-    p.codename = ''.join([random.choice(string.ascii_uppercase) for n in range(3)] +[random.choice(string.digits) for n in range(2)])
+    p.codename = ''.join([random.choice(string.ascii_uppercase) for n in range(1)] +[random.choice(string.digits) for n in range(1)])
+    p.codeurl=Constants.baseurl+p.codename
     p.role=role
     p.money=10000
     print ("role",role)
     if role=="RE":
-        p.name="value"
+        p.name="value" # else it is by default "cost"
     p.save()
     value2=[]
     value2_cumm=[]
@@ -188,13 +190,11 @@ def median_value10(queryset,term):
         return(None)
 
 
-from django.db.models import Avg,Sum
 
 
-
-def index_calculations(group_id, id_in_group):
-    print("index calc called!")
-    group_id=int(group_id)
+def index_calculations(group_idd, id_in_group):
+    print("BEGIN index_calculations")
+    group_id=int(group_idd)
     id_in_group=int(id_in_group)
     # we need to check if there are player objects already
     g=getGroup(group_id)
@@ -205,6 +205,7 @@ def index_calculations(group_id, id_in_group):
     # ToDo: distinguis between the groups in the queries
     trans_list2 = Transaction.objects.filter(group=p.group).order_by('-id')
     voucher_list = Voucher.objects.filter(player=p).order_by('idd')
+    print("voucher_list ",voucher_list )
     units_produced= int(Voucher.objects.filter(used=True).count()/2)
 
 
@@ -225,7 +226,7 @@ def index_calculations(group_id, id_in_group):
         average_price=int(round(trans_list2.aggregate(Avg('price'))["price__avg"]))
         average_price_last10transactions=int(round(trans_list2.filter(id__gte=id_include).aggregate(Avg('price'))["price__avg"]))
 
-        #print("id_include",id_include)
+        print("id_include",id_include)
         #print("trans_list2.filter(id__gte=id_include)",trans_list2)
         ##print("average_price",trans_list2.aggregate(Avg('price')))
         #print("trans_list2.filter(id__gte=id_include)",trans_list2.filter(id__gte=id_include))
@@ -389,6 +390,7 @@ def index_calculations(group_id, id_in_group):
         ,'combo_offers': combo_offerST,'combo_offers2':standing_marketST, 'buy_offers': buy_listST
         ,'sell_offers': sell_listST,'myOffers': myOffersCL,'myOffers_inv':myOffersCL_inv,'myOffersST': myOffersST,'lastOffer': lastOfferST,'players': player_list
         ,'offers':offer_listST, 'transactions': trans_list2}
+    print("END index_calculations")
     return context2
 
 def none_to_zero(elt):
@@ -401,7 +403,7 @@ def none_to_zero(elt):
 # "real" views
 import random, string
 
-def initialize(request, group_id, id_in_group):
+def initialize(request):
     # DEM
     # create the main player - Producer
     # then in addition 4 more producers
@@ -411,8 +413,10 @@ def initialize(request, group_id, id_in_group):
 
     #create codes for the other players
     #Constants.PR_number, Constants.RE_number
+    #group_id, id_in_group=decode(codename)
 
-    if not Constants.init_started:
+    #if not Constants.init_started:
+    if True:
         Constants.init_started=True
         print ("Constants.init_started",Constants.init_started)
         #state.save()
@@ -421,8 +425,8 @@ def initialize(request, group_id, id_in_group):
         Offer.objects.all().delete()
         Player.objects.all().delete()
         Group.objects.all().delete()
-        group_id=int(group_id)
-        id_in_group=int(id_in_group)
+        group_id=int(1)
+        #id_in_group=int(id_in_group)
         # we need to check if there are player objects already
         g=getGroup(group_id)
         for i in range(1,Constants.PR_number+1):
@@ -430,20 +434,26 @@ def initialize(request, group_id, id_in_group):
         for i in range(Constants.PR_number+1,Constants.PR_number+Constants.RE_number+1):
             createPlayer(g,i,"RE") # 2 retailers, with index i={3,4}
             print("Drawing the theoretical prediction")
-
+        #players_qlist= Player.objects.all()
+        #'offers':offer_listST
+        player_list = Player.objects.all()
         Constants.script2, Constants.div2,Constants.sd_price_max,Constants.sd_price_min,Constants.sd_units=D_S_analysis()
     #what?
 
     else:
         print("ERROR: Why is initialize called a second time???")
-    return HttpResponseRedirect(reverse('index',args=(group_id,id_in_group)))
+        return
+    return render(request, 'dAuction2/code_assign.html', context={"player_list":player_list})
+    # ToDo: the page still shows "initialize" and refresh creates new codes. How to make this a new page?
+    #return HttpResponseRedirect(reverse('code_assignment'))
+
 
 def D_S_analysis():
     # calculate D-S analyzis
     # ONLY NEEDS TO BE DONE ONCE - SHOULD BE MOVED SOMEWHERE
     print("def D_S_analysis()  CALLED ........................................................")
-    g=getGroup(1)
-    p=getPlayer(g,1)
+    #g=getGroup(group_id)
+    #p=getPlayer(g, id_in_group)
     if True:
         DS_cost = Voucher.objects.filter(idd__gt=0).filter(role="PR").order_by('value')
         DS_value = Voucher.objects.filter(idd__gt=0).filter(role="RE").order_by('-value')
@@ -484,17 +494,22 @@ def D_S_analysis():
         price_min = DS_cost_list[DS_index]
 
         #############################
-        relevantVouchers=Voucher.objects.filter(player=p).filter(idd__gt=0).filter(value__lte=price_max)
-        Constants.my_cost_th = relevantVouchers.aggregate(Sum('value'))["value__sum"]
+#        relevantVouchers=Voucher.objects.filter(player=p).filter(idd__gt=0).filter(value__lte=price_max)
+#        Constants.my_cost_th = relevantVouchers.aggregate(Sum('value'))["value__sum"]
+#        Constants.my_profit_th=relevantVouchers.last().idd * price_max - Constants.my_cost_th
+#        print("Constants.my_profit_th",Constants.my_profit_th)
+#        print("Constants.my_cost_th",Constants.my_cost_th)
+#        print("price_max",price_max)
+#        Constants.my_score= round((p.profit / Constants.my_profit_th) * 100)
+        #############################
 
-        Constants.my_profit_th=relevantVouchers.last().idd * price_max - Constants.my_cost_th
-        print("Constants.my_profit_th",Constants.my_profit_th)
-        print("Constants.my_cost_th",Constants.my_cost_th)
-        print("price_max",price_max)
 
-        Constants.my_score= round((p.profit / Constants.my_profit_th) * 100)
+
         #DS_PR_net= [x - y for x, y in zip(DS_value_list,DS_cost_list)]
         #DS_index=[i for i,x in enumerate(DS_net) if x<0][0]-1  #gets the indexes for when x<0
+
+
+
 
         #print("price between ",DS_cost_list[DS_index]," and ",DS_value_list[DS_index])
         DS_index_x=[DS_index,DS_index]
@@ -543,16 +558,36 @@ def D_S_analysis():
         #sd.save()
         return(Constants.script2, Constants.div2,Constants.sd_price_max,Constants.sd_price_min,Constants.sd_units)
 
-def index(request, group_id, id_in_group):
+
+#def code_assignment:
+
+
+def decode(codename):
+    print("BEGIN decode")
+    p = Player.objects.get_or_create(codename=codename)[0]
+    g=p.group
+    print("g, p",g,p)
+    print("END decode")
+    return g.group_id, p.id_in_group
+
+#def index(request, group_id, id_in_group):
+def index(request, codename):
     print("index called")
     if Constants.stop:
+        print("Constants.stop",Constants.stop)
         return request
+    print("codename",codename)
+    group_id, id_in_group=decode(codename)
+    print("group_id, id_in_group",group_id, id_in_group)
     context2=index_calculations(group_id, id_in_group)
     context = RequestContext(request, context2)
-    return render_to_response('dAuction2/index.html', context_instance = context)
+    return render(request,'dAuction2/index.html', context= context2)
 
 
 def all_transactions(request,group_id, id_in_group):
+#def all_transactions(request,codename):
+#    group_id, id_in_group=decode(codename)
+
     context2=index_calculations(group_id, id_in_group)
     #print("all_trans called!")
     return render(request, 'dAuction2/all_transactions.html', context=context2)
@@ -562,6 +597,7 @@ def all_standing_market_offers(request,group_id, id_in_group):
     #print("all_stand called!")
     #print("Connected player group id is:", group_id,)
     #print("Connected player id in group is:", id_in_group,)
+    context2=index_calculations(group_id, id_in_group)
     return render(request,'dAuction2/all_standing_market_offers.html',context = context2)
 
 
@@ -570,8 +606,11 @@ def my_standing_offer(request,group_id, id_in_group):
     #print("my_stand 3333333333333333333333333333!")
     return render(request,'dAuction2/my_standing_offer.html',context= context2)
 
-
 def refresh(request,group_id, id_in_group):
+#def refresh(request,codename):
+#    group_id, id_in_group=decode(codename)
+
+
     context2=index_calculations(group_id, id_in_group)  # index_calculations calculates the up-to-date state
 
     print("refresh!")
@@ -941,7 +980,8 @@ def set_offer(request,group_id, id_in_group,valUnits,valPrice,valType):
         #print("BEFORE if id_in_group == 1:")
         Constants.setOffer_started=False
         #state.save()
-        if id_in_group == 1:
+        #if id_in_group == 1:
+        if True:
             print("is me, thus render!")
             return render(request,'dAuction2/my_standing_offer2.html', context = context2)
         else:

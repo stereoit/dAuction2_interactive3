@@ -1,0 +1,25 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Code Assignment!!</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'dAuction2/style.css' %}" />
+
+
+    </head>
+
+<body>
+<div id="container2">
+    <div id="my_vouchers">
+        The codes are:
+        <ol>
+            {% for player in player_list %}
+                <li> {{ player.codeurl }}</li>
+                <br>
+            {% endfor %}
+        </ol>
+    </div>
+</div> <!-- id container2 -->
+</body>
+</html>

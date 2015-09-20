@@ -6,8 +6,10 @@
         //refreshtime=20000;
         $('#Cancel').click
         (function () {
+                var group_id = $('#group_idInput').val();
+                var id_in_group = $('#id_in_groupInput').val();
                 var $my_standing_offer = $('#my_standing_offer');
-                $my_standing_offer.load('dAuction2/cancel_so/');
+                $my_standing_offer.load('/' + group_id + '/' + id_in_group +'/dAuction2/cancel_so/');
             }
         );
 
@@ -64,8 +66,11 @@
         var auto_refresh = setInterval
         (
             function () {
+                var group_id = $('#group_idInput').val();
+                var id_in_group = $('#id_in_groupInput').val();
+
                 $.get
-                ('dAuction2/refresh/', function (data) {
+                ('/'+group_id+'/'+id_in_group+'/'+'dAuction2/refresh/', function (data) {
                         var $all_transactions_digital = $(data).filter('#all_transactions_digital').html();
                         //var $my_cleared_offers = $(data).filter('#my_cleared_offers').html();
                         var $all_transactions = $(data).filter('#all_transactions').html();

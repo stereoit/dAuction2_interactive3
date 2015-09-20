@@ -33,7 +33,7 @@ class Constants:
     my_score=-6
     PR_number=3
     RE_number=3
-
+    baseurl="http://192.168.23.1:8000/"
 
     def __str__(self):  #For Python 2, use __str__ on Python 3
         return self.name
@@ -65,6 +65,7 @@ class Player(models.Model):
     group = models.ForeignKey(Group)
     id_in_group= models.IntegerField(default=0)
     codename = models.CharField(max_length=10)
+    codeurl = models.URLField(max_length=200)
     role = models.CharField(max_length=4, default="PR") # two roles: PRoducer and REtailer
     name = models.CharField(max_length=5, default="cost") # two names: Cost and Value
     money = models.IntegerField(default=0)
