@@ -1,14 +1,23 @@
 from django.conf.urls import patterns, url,include
-from dAuction2 import views
+from dAuction2 import views,models
 from django.contrib import admin
 from dAuction2.views import  index
+
+ident="(?P<group_id>[0-9]{1,2})/(?P<id_in_group>[0-9]{1,2})/$"
+u_initialize="^initialize/"+ident
+u_index="^initialize/(?P<group_id>[0-9]{1,2})/(?P<id_in_group>[0-9]{1,2})/$"
+
+
 
 
 
 urlpatterns = patterns('',
         #url(r'^$', views.index, name='index'),
 
-        url(r'^initialize/(?P<group_id>[0-9]{1,2})/(?P<id_in_group>[0-9]{1,2})/$', views.initialize, name='initialize'),
+        #url(r'^initialize/(?P<group_id>[0-9]{1,2})/(?P<id_in_group>[0-9]{1,2})/$', views.initialize, name='initialize'),
+        url(u_initialize, views.initialize, name='initialize'),
+
+
         #from OTREE the call is for this url
 
         url(r'^(?P<group_id>[0-9]{1,2})/(?P<id_in_group>[0-9]{1,2})/$', views.index, name='index'),

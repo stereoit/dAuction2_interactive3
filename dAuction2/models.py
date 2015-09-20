@@ -42,6 +42,7 @@ class Constants2(models.Model):
     init_started= models.BooleanField(default=False)
     setOffer_started= models.BooleanField(default=False)
 
+
     def __str__(self):  #For Python 2, use __str__ on Python 3
         return str(self.id)
 
@@ -63,7 +64,7 @@ class SD(models.Model):
 class Player(models.Model):
     group = models.ForeignKey(Group)
     id_in_group= models.IntegerField(default=0)
-    name = models.CharField(max_length=128)
+    codename = models.CharField(max_length=10)
     role = models.CharField(max_length=4, default="PR") # two roles: PRoducer and REtailer
     name = models.CharField(max_length=5, default="cost") # two names: Cost and Value
     money = models.IntegerField(default=0)
@@ -99,7 +100,7 @@ class Offer(models.Model):
     canceled = models.BooleanField(default=False)
     cleared = models.BooleanField(default=False)
     updated = models.BooleanField(default=False)
-    name = models.CharField(max_length=128)
+    #name = models.CharField(max_length=128)
     priceLimit = models.IntegerField(default=-5)
 
     parentId= models.IntegerField(default=-11)  # the id of the parent offer
@@ -108,7 +109,7 @@ class Offer(models.Model):
     unitsOriginal = models.IntegerField(default=-3)   # the number of units in the original offer
     unitsInherited = models.IntegerField(default=-4)   # the number of units inherited
     priceCleared = models.IntegerField(default=-5)   # the price for the offer has been traded
-    priceOriginal = models.IntegerField(default=-6)  # the price for which a offer will be accepted
+    priceOriginal = models.IntegerField(default=-6)  # the price in the original offer
     timeCreated = models.DateTimeField(default=timezone.now)
     product = models.IntegerField(default=0)
     def __str__(self):  #For Python 2, use __str__ on Python 3

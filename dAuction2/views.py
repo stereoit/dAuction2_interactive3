@@ -102,6 +102,7 @@ def myround(x, base=20):
 
 def createPlayer(g, id_in_group,role):
     print("BEGIN createPlayer (g, id_in_group,role):",g, id_in_group,role)# DEM
+
     # create the main player - Producer
     # then in addition 4 more producers
     # and 5 retailers
@@ -122,6 +123,7 @@ def createPlayer(g, id_in_group,role):
     p = Player.objects.get_or_create(group=g,id_in_group=id_in_group)[0]
     #c = Constants()
     print("CREATEPLAYER!!! for:",p)
+    p.codename = ''.join([random.choice(string.ascii_uppercase) for n in range(3)] +[random.choice(string.digits) for n in range(2)])
     p.role=role
     p.money=10000
     print ("role",role)
@@ -397,7 +399,7 @@ def none_to_zero(elt):
 
 ###########################################################
 # "real" views
-
+import random, string
 
 def initialize(request, group_id, id_in_group):
     # DEM
@@ -406,6 +408,10 @@ def initialize(request, group_id, id_in_group):
     # and 5 retailers
     #state = Constants2.objects.get_or_create(id=1)[0]
     #print ("state",state)
+
+    #create codes for the other players
+    #Constants.PR_number, Constants.RE_number
+
     if not Constants.init_started:
         Constants.init_started=True
         print ("Constants.init_started",Constants.init_started)
@@ -758,12 +764,16 @@ def setproducts(c,p,first,first_player):
 def set_offer(request,group_id, id_in_group,valUnits,valPrice,valType):
     # a player makes an offer. The offer is first created and then checked against the existing offers and matched and cleared if
     # possible
-    if Constants.stop:
-        return request
+
+    #if Constants.stop:
+    #    return request
+
     #state = Constants2.objects.get_or_create(id=1)[0]
     #print("state.setOffer_started", state.setOffer_started)
     #print ("state",state)
-    if not Constants.setOffer_started:
+
+    #if not Constants.setOffer_started:
+    if True:
         Constants.setOffer_started=True
         #state.save()
 
