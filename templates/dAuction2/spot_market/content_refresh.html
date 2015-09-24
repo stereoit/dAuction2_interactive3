@@ -46,13 +46,13 @@
 
     <!-- Showing MY standing offer -->
     <div id="my_standing_offer">
-        {% include 'dAuction2\my_standing_offer.html' %}
+        {% include 'dAuction2\spot_market\my_standing_offer.html' %}
     </div>
 
 
 
     <div id="all_standing_market_offers">
-        {% include 'dAuction2\all_standing_market_offers.html' %}
+        {% include 'dAuction2\spot_market\all_standing_market_offers.html' %}
     </div>
 
 
@@ -77,16 +77,16 @@
     </div>
 
     <div id="my_cleared_offers">
-       {% include 'dAuction2\my_cleared_offers.html' %}
+       {% include 'dAuction2\spot_market\my_cleared_offers.html' %}
     </div>
 
     <!-- Showing All transactions -->
     <div id="all_transactions">
-        {% include 'dAuction2\all_transactions.html' %}
+        {% include 'dAuction2\spot_market\all_transactions.html' %}
     </div>
 
     <div id="all_transactions_text">
-        {% include 'dAuction2\all_transactions_text.html' %}
+        {% include 'dAuction2\spot_market\all_transactions_text.html' %}
     </div>
 
 
@@ -96,13 +96,13 @@
 
     <div id="my_vouchers">
            <!-- Showing all values -->
-        {% include 'dAuction2\my_vouchers.html' %}
+        {% include 'dAuction2\spot_market\my_vouchers.html' %}
     </div>
 
     <div id="theoretical_predictions_text">
         {% if Constants.show_theory %}
             <div class="theoretical_predictions_text_container" id="theoretical_predictions_text_container">
-                {% include 'dAuction2\theoretical_predictions_text.html' %}
+                {% include 'dAuction2\spot_market\theoretical_predictions_text.html' %}
             </div>
         {% endif %}
     </div>
@@ -111,7 +111,7 @@
     <div id="theoretical_predictions">
         {% if Constants.show_theory %}
             <div class="theoretical_predictions_container" id="theoretical_predictions_container">
-                {% include 'dAuction2\theoretical_predictions.html' %}
+                {% include 'dAuction2\spot_market\theoretical_predictions.html' %}
             </div>
         {% endif %}
     </div>

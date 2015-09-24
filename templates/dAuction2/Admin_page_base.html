@@ -1,0 +1,107 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Code Assignment!!</title>
+        <link rel="stylesheet" href="//cdn.pydata.org/bokeh/release/bokeh-0.9.2.min.css" type="text/css" />
+        <link rel="stylesheet" type="text/css" href="{% static 'dAuction2/style.css' %}" />
+        <script src="{% static "js/bokeh.min.js" %}"></script>
+        <script src="{% static "js/jquery-2.1.4.min.js" %}"></script>
+
+
+
+
+        {% block refresh_Master %}
+            <script src="{% static "js/dAuction2-jquery_Master.js" %}"></script>
+        {% endblock %}
+
+
+
+    </head>
+
+<body>
+    <div id="columns1">
+        <div id="my_vouchers">
+            The codes are:
+            <ol>
+                {% for player in player_list %}
+                    <table>
+                        <tr><td> <li> {{ player.codeurl }}</li></td></tr>
+                        <tr><td><a href="{{ player.codeurl }}">{{ player.codeurl }}</a></td> </tr>
+
+                        <br>
+                    </table>
+                {% endfor %}
+            </ol>
+
+            <input type="hidden" id= "group_idInput" name="group_idInput"  value="99">
+            <input type="hidden" id= "id_in_groupInput" name="id_in_groupInput" value="99">
+            <div id="refresh_button">
+                {% block refresh_button %}{% endblock %}
+            </div>
+        </div>
+    </div>
+    <div id="spacing"></div>
+    <div id="columns2"></div>
+    <div id="spacing"></div>
+
+    {% block all_transactions %}
+
+    <div id="columns3">
+        <div class="c24" id="c24">
+            <!-- Showing All transactions -->
+            <div id="all_transactions">
+                {% include 'dAuction2\spot_market\all_transactions.html' %}
+            </div>
+        </div>
+
+        <div class="all_transactions_text_container2" id="all_transactions_text_container2">
+
+            <div class="all_transactions_text_container" id="all_transactions_text_container">
+                <!-- Showing All transactions -->
+                <div id="all_transactions_text">
+                    {% include 'dAuction2\spot_market\all_transactions_text.html' %}
+                </div>
+            </div>
+
+            {% if True %}
+                <div class="theoretical_predictions_button_container" id="theoretical_predictions_button_container">
+                    <!-- Showing All transactions -->
+                    {% include 'dAuction2\spot_market\stop_button.html' %}
+                    <br>
+                    <br>
+                        <div id="theoretical_predictions_button">
+                            {% include 'dAuction2\spot_market\theoretical_predictions_button.html' %}
+                        </div>
+                </div>
+            {% endif %}
+        </div>
+
+
+        <div id="spacing_horizontal"></div>
+
+        <!-- Showing All transactions -->
+        <div id="theoretical_predictions">
+            {% if Constants.show_theory %}
+                <div class="theoretical_predictions_container" id="theoretical_predictions_container">
+                    {% include 'dAuction2\spot_market\theoretical_predictions.html' %}
+                </div>
+            {% endif %}
+        </div>
+
+
+
+        <!-- Showing All transactions -->
+        <div id="theoretical_predictions_text">
+            {% if Constants.show_theory %}
+                <div class="theoretical_predictions_text_container" id="theoretical_predictions_text_container">
+                    {% include 'dAuction2\spot_market\theoretical_predictions_text.html' %}
+                </div>
+            {% endif %}
+        </div>
+
+    </div> <!-- id columns3 -->
+    {% endblock %}
+</body>
+</html>

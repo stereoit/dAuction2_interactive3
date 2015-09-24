@@ -82,6 +82,9 @@
             function () {
                 var group_id = $('#group_idInput').val();
                 var id_in_group = $('#id_in_groupInput').val();
+                console.log('1111111111111111111111111111111111111111111111111111111111111something');
+                console.log('group_id',group_id);
+                console.log('id_in_group',id_in_group);
 
                 $.get
                 ('/'+group_id+'/'+id_in_group+'/'+'dAuction2/refresh/', function (data) {
@@ -103,8 +106,8 @@
                         $('#theoretical_predictions_text').html($theoretical_predictions_text);
                         $('#theoretical_predictions').html($theoretical_predictions);
                         $('#all_standing_market_offers').html($all_standing_market_offers);
-                        $('#my_standing_offer').html($my_standing_offer);
-                        $('#my_vouchers').html($my_vouchers);
+                        //$('#my_standing_offer').html($my_standing_offer);
+                        //$('#my_vouchers').html($my_vouchers);
                     }
                 );
             }
