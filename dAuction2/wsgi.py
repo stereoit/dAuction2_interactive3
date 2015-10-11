@@ -7,7 +7,7 @@ For more information on this file, see
 https://docs.djangoproject.com/en/1.7/howto/deployment/wsgi/
 """
 
-import cherrypy
+#import cherrypy
 
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dAuction2.settings")

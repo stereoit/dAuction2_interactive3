@@ -74,7 +74,7 @@ class Player(models.Model):
     id_in_group= models.IntegerField(default=0)
     codename = models.CharField(max_length=10)
     codeurl = models.URLField(max_length=200)
-    role = models.CharField(max_length=4, default="PR") # two roles: PRoducer and REtailer
+    role = models.CharField(max_length=4, default="PR")  # two roles: PRoducer and REtailer
     name = models.CharField(max_length=5, default="cost")
         # two names: "cost" and "value"- used to print "cost" on the page for producers and
         # "value" for retailers

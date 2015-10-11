@@ -86,48 +86,44 @@ def createPlayer(g, id_in_group,role):
 
 def index_calculations(group_idd, id_in_group):
     # In this procedure all the calculations are done that are necessary to now the state of the auction
-    # how many transactions have been done, how many offers are out.
+    # how many transactions have been done, how many offers are out, coordinates for the graphs, etc
     # Note: NO offers are cleared in this procedure.
 
     print("BEGIN index_calculations")
     group_id=int(group_idd)
     id_in_group=int(id_in_group)
-    # we need to check if there are player objects already
+        # we need to check if there are player objects already
     g=getGroup(1)
     p=getPlayer(g,id_in_group)
-    # ToDo: distinguis between the groups in the queries
+
     trans_list2 = Transaction.objects.filter(group=p.group).order_by('-id')
+        # gets a list with all the transactions withing this group
     units_produced= int(Voucher.objects.filter(used=True).count()/2)
+        # gets a list with all the number of used vouchers divided by 2 and thus the number of transactions
+        # (as number of used vouchers counts the transactions on both the side of the buyers and sellers)
 
 
-    # median price, average price, units traded,
+    # Get some statistics, such as the median price, average price, units traded,
     if trans_list2:
-        #print("BEFORE median_price")
 
         count =min(10, trans_list2.count())
         lasttrans=trans_list2.first()
         max_id=lasttrans.id
         print("count",count)
         id_include=max(1,max_id-count)
+            # We want to calculate some statistics over the last 10 transactions.
+            # #id_include gives the id from which to start counting to get exactly 10 transactions
+        #print("id_include",id_include)
 
         median_price= median_value(trans_list2,"price")
         median_price_last10transactions= median_value10(trans_list2,"price")
-        #average_price2= trans_list2.aggregate(Avg('price'))
-        #print("average_price2",average_price2)
+
         average_price=int(round(trans_list2.aggregate(Avg('price'))["price__avg"]))
         average_price_last10transactions=int(round(trans_list2.filter(id__gte=id_include).aggregate(Avg('price'))["price__avg"]))
-
-        print("id_include",id_include)
-        #print("trans_list2.filter(id__gte=id_include)",trans_list2)
-        ##print("average_price",trans_list2.aggregate(Avg('price')))
-        #print("trans_list2.filter(id__gte=id_include)",trans_list2.filter(id__gte=id_include))
-        #print("average_price_last10transactions",trans_list2.filter(id__gte=id_include).aggregate(Avg('price')))
-        #units2= trans_list2.aggregate(Sum('units'))
         units=round(int(trans_list2.aggregate(Sum('units'))["units__sum"]))
-        #print("AFTER  median_price")
-        units=round(int(trans_list2.aggregate(Sum('units'))["units__sum"]))
-
+        # total number of units that has been transacted
     else:
+        # In case no transactions have been done, all statistics get value None
         median_price= None
         median_price_last10transactions=None
         average_price_last10transactions=None
@@ -135,17 +131,25 @@ def index_calculations(group_idd, id_in_group):
         units=None
 
     offer_listST3 = Offer.objects.filter(group=p.group).exclude(canceled=True)
-
+        # all offers that are not cancelled
     offer_listST2 = offer_listST3.filter(cleared=False)
+        # all offers that are active: not cancelled or cleared
     offer_listST = offer_listST2.order_by('-id')
-    #offer_listST_inv = offer_listST2.order_by('id')[:135]
-    sell_listST = offer_listST2.filter(type = "SELL").order_by('priceOriginal')
-    sell_priceST=[entry for entry in sell_listST.values_list('priceOriginal',flat=True)]
-    sell_priceSTdb=doubley(sell_priceST)
+        # all offers ordered by -id (thus most recent ones first)
 
+    sell_listST = offer_listST2.filter(type = "SELL").order_by('priceOriginal')
+        # only all selling offers
+    sell_priceST=[entry for entry in sell_listST.values_list('priceOriginal',flat=True)]
+        # extracts the prices of the selling offers as a list
+    sell_priceSTdb=doubley(sell_priceST)
+        # processes the numbers to get a representation for the graph (to get stairshaped figure)
     sell_unitsST=[entry for entry in sell_listST.values_list('unitsAvailable',flat=True)]
+        # extracts the units of the selling offers as a list
     sell_cumST = reduce(lambda acc, sell_unitsST: acc + [acc[-1] + sell_unitsST], sell_unitsST[1:], sell_unitsST[:1])
-    #sell_cumST = cummulator(sell_unitsST)    #
+    sell_cumST = cummulator(sell_unitsST)    #
+        # get list with cummulative values of the units
+
+
 
     sell_cumSTdb=doublex(sell_cumST)
 

@@ -12,6 +12,7 @@ from dAuction2.functions import *
 
 
 def none_to_zero(elt):
+    # changes the value None to 0 (an integer)
     if not elt:
         return [0]
     else:
@@ -47,6 +48,7 @@ def transpose_pad(sellPrice,buyPrice):
 
 
 def accumulator(zz):
+    # I forgot what this does exactly, but I remember it is important for the market orders table
     qq=[]
     length=len(zz)
     prevCum=0
@@ -66,8 +68,8 @@ def accumulator(zz):
 
 
 def doubley(x):
-#  this function doubles a list with y coordinates for the graph. The doubling is done so that the graph will have
-#  a step form.
+#  this function doubles a list with y coordinates for the graph. The doubling is done so that the graph
+#  will have a step form.
     if x:
         qwy=[x for pair in zip(x,x) for x in pair]
         return qwy
@@ -84,6 +86,7 @@ def doublex(x):
 
 
 def getGroup(group_id):
+    # gets or creates the correct group object given the group number #group_id
     print("BEGIN getGroup(group_id):", group_id)
     g = Group.objects.get_or_create(group_id=group_id)[0]
     g.save()
@@ -91,19 +94,23 @@ def getGroup(group_id):
 
 
 def getPlayer(g, id_in_group):
+    # gets or creates the correct player object given the player number #id_in_group
     p = Player.objects.get_or_create(group=g,id_in_group=id_in_group)[0]
     #p.money=10000
     p.save()
     return p
 
 def myround(x, base=20):
+    # how I want to round numbers. The function allows me to have different rounding rules
     return int(base * round(float(x)/base))
 
 
 def cummulator(listt):
+    # gets a list with cummulative values
         return reduce(lambda acc, listt: acc + [acc[-1] + listt], listt[1:], listt[:1])
 
 def median_value(queryset,term):
+    # gets the median value of a #term in a #queryset
     if queryset:
         #print(" inside if", queryset)
         count = queryset.count()
@@ -112,6 +119,7 @@ def median_value(queryset,term):
         return(None)
 
 def median_value10(queryset,term):
+    # gets the median value of the last 10 observations of a #term in a #queryset
     if queryset:
         #print(" inside if", queryset)
         count = queryset.count()
@@ -120,8 +128,6 @@ def median_value10(queryset,term):
         return queryset.filter(id__gte=id_include).values_list(term, flat=True).order_by(term)[int(round(count2/2))]
     else:
         return(None)
-
-
 
 
 def copy_offer(c,p, first):
@@ -142,8 +148,8 @@ def copy_offer(c,p, first):
     return c2
 
 
-
 def decode(codename):
+    # given the codename, the player is retrieved
     print("BEGIN decode")
     p = Player.objects.get_or_create(codename=codename)[0]
     g=p.group
@@ -154,6 +160,8 @@ def decode(codename):
 
 
 def setproducts(c,p,first,first_player):
+    # calculates the revenue for a sale or total cost for a buy
+    # the revenue is then added to the trading result (the income from trading for a player)
     print("call setproducts")
     print("c.type:",c.type)
     if c.type=="SELL": # thus player p is selling and thus first is a buying offer
@@ -171,15 +179,21 @@ def setproducts(c,p,first,first_player):
     print("END setproducts(c,p,first,first_player):",c,p,first,first_player)
 
 
-
-
 def set_voucher(p,first_player,first,unitsCleared):
+    # this writes the changes to the vouchers of players after they have made a transaction
+    # For Producers (Retailers), vouchers are used as they sell (buy).
+    # For Producers (Retailers), vouchers are released if they buy (sell).
+    # If a Producer (Retailers) buys (sells) more than he has sold (bought) extra vouchers are created for him
+    #
+
     # first treat the vouchers of the present bidder (p)
     print("BEGIN set_voucher(p,first,unitsCleared):",p,first,unitsCleared)
     #first_player=first.player
     tel_p=Voucher.objects.filter(player=p, used=True).count()
     tel_all_p=Voucher.objects.filter(player=p).count()
     negative_p=35-tel_all_p
+        # negative_p gives the number of extra vouchers he has (generally 0, but can be positive with
+        # speculation
     #print ("tel_p",tel_p)
     #print ("tel_all_p",tel_all_p)
     tel_f=Voucher.objects.filter(player=first_player, used=True).count()
@@ -278,6 +292,10 @@ def set_voucher(p,first_player,first,unitsCleared):
 
 
 def create_and_cut_vouchers(player_to_set,p,first,unitsCleared):
+    # if a producers buys units, the used vouchers must be freed for re-use. If the producer buys more units
+    # than he sold previously, extra vouchers are made for him.
+    # if a retailer sells units, the used vouchers must be freed for re-use. If the retailer sells more units
+    # than he bought previously, extra vouchers are made for him.
     print("BEGIN create_and_cut_vouchers(player_to_set,p,first,unitsCleared):",player_to_set,p,first,unitsCleared)
     tel_p=Voucher.objects.filter(player=player_to_set, used=True).count()
     tel_all_p=Voucher.objects.filter(player=player_to_set).count()
