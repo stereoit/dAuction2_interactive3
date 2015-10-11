@@ -14,34 +14,42 @@ from dAuction2.functions_mature import *
 
 def createPlayer(g, id_in_group,role):
     print("BEGIN createPlayer (g, id_in_group,role):",g, id_in_group,role)# DEM
+    # create a player in group #g (object), with #number id_in_group (an integer) and
+    # with role #role (#role=="PR" for PRoducer or #role=="RE" for REtailer)
+    # Values for the #vouchers are assigned (they are the cost of producing for Producers
+    # and the earnings for Retailers).
+    # The marginal values are random with, for Retailers, average #r_average and standard deviation
+    # r_sd and, for Producers, average #p_average and standard deviation
+    # p_sd
 
-    # create the main player - Producer
-    # then in addition 4 more producers
-    # and 5 retailers
-    #print(Constants.understanding_1_correct)
-    #Constants.understanding_1_correct="What???"
-    #print(Constants.understanding_1_correct)
+
     r_average=10
     r_sd=20
-    p_average=.01
-    p_sd=.5
     r_start=1000
     r_max=60
     r_min=0
 
+    p_average=.01
+    p_sd=.5
     p_max=30
     p_min=0
 
     p = Player.objects.get_or_create(group=g,id_in_group=id_in_group)[0]
-    #c = Constants()
-    print("CREATEPLAYER!!! for:",p)
+        # creates a player or retrieves him
+    #print("CREATEPLAYER!!! for:",p)
     p.codename = ''.join([random.choice(string.ascii_uppercase) for n in range(1)] +[random.choice(string.digits) for n in range(1)])
     p.codeurl=Constants.baseurl+p.codename
+        # creates the codename and the url for the player to use
+
     p.role=role
-    p.money=10000
     print ("role",role)
+        # assigns the role for the player
+    p.money=10000
+        # assigns some starting money to a player - NOT USED YET
+
     if role=="RE":
-        p.name="value" # else it is by default "cost"
+        p.name="value"
+        # else it is by default "cost" - this is used for printing on the page in the templates
     p.save()
     value2=[]
     value2_cumm=[]
@@ -50,37 +58,37 @@ def createPlayer(g, id_in_group,role):
     random.seed()
     if role=="PR":
         for i in range(35):
-            #value2.append(int(max(0,round(random.gauss(p_average, p_sd),-1))))  #is good, but slow
-            #valPR+=round(random.randint(p_min, p_max),-1)
             valPR+=abs(myround(random.gauss(i*i*i*p_average, (i*i*p_sd))))
             valPR=min(valPR,1200)
             value2.append(valPR)
-            #value2.sort()
-            #value2_cumm=reduce(lambda acc, value2: acc + [acc[-1] + value2], value2[1:], value2[:1])
+                # creates a list with marginal values. The values are strictly increasing and convex
+                # with a maximum of 1200. This construction avoids needing to sort.
             value2_cumm=cummulator(value2)
+                # #value2_cumm has the cummulative valuesof value2
     elif role=="RE":
         for i in range(35):
             #value2.append(int(max(0,round(random.gauss(r_average, r_sd),-1))))  #is good, but slow
             #valRE=max(0,valRE - round(random.randint(r_min, r_max),-1))
             valRE=max(0,valRE - abs(myround(random.gauss(r_average, r_sd))))
             value2.append(valRE)
-            #value2.append(int(max(0,round(random.randint(r_min, r_max),-1))))
-            #value2.sort(reverse=True)
-            #value2_cumm=reduce(lambda acc, value2: acc + [acc[-1] + value2], value2[1:], value2[:1])
+                # creates a list with marginal values. The values are strictly increasing and convex
+                # with a maximum of 1200. This construction avoids needing to sort.
             value2_cumm=cummulator(value2)
-    #print(value2)
-    #Voucher.objects.filter(player=p).delete()
-    #Offer.objects.filter(player=p).delete()
-    #Transaction.objects.filter(player=p).delete()
+                # #value2_cumm has the cummulative valuesof value2
 
     for i in range(35):
         v = Voucher(idd=i+1,value_cum=value2_cumm[i],value=value2[i],player=p,group=p.group,role=role)
         v.save()
+        # only here all the vouchers are created, using the values put in the variables #value2 and #value2_cumm
     print("END createPlayer (g, id_in_group,role):",g, id_in_group,role)# DEM
     return p
 
 
 def index_calculations(group_idd, id_in_group):
+    # In this procedure all the calculations are done that are necessary to now the state of the auction
+    # how many transactions have been done, how many offers are out.
+    # Note: NO offers are cleared in this procedure
+    
     print("BEGIN index_calculations")
     group_id=int(group_idd)
     id_in_group=int(id_in_group)

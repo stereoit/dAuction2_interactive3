@@ -3,17 +3,19 @@ from dAuction2 import views,models
 from django.contrib import admin
 from dAuction2.views import  index
 
+    # I found out I can put strings in variables and then use this in the urlpatterns.
+    # It made things work as I want to give players codenames.
+    # the "true identity" of a player is his group number ("group_id")
+    # and his number in the group ("id_in_group")
 ident="(?P<group_id>[0-9]{1,2})/(?P<id_in_group>[0-9]{1,2})/"
 ident_code="(?P<codename>[A-Z]{1,3}[0-9]{1,2})/"
+    # This is the codename of a player
 ident_master="99/99/"
 u_initialize="^initialize/$"
 u_initialize2="^$"
-#url(r'^initialize/(?P<group_id>[0-9]{1,2})/(?P<id_in_group>[0-9]{1,2})/$', views.initialize, name='initialize'),
 u_index=ident_code+"$"
-
-
 u_set_offer="^"+ident +"dAuction2/set_offer/(?P<valUnits>[0-9]{1,2})/(?P<valPrice>[0-9]{1,6})/(?P<valType>[A-Z]{3,4})$"
-#url(r'^(?P<group_id>[0-9]{1,2})/(?P<id_in_group>[0-9]{1,2})/dAuction2/set_offer/(?P<valUnits>[0-9]{1,2})/(?P<valPrice>[0-9]{1,6})/(?P<valType>[A-Z]{3,4})$', views.set_offer, name='set_offer'),
+
 u_cancel_so="^"+ident +"dAuction2/cancel_so/$"
 u_all_transactions="^"+ident+"dAuction2/all_transactions/$"
 u_all_standing_market_offers="^"+ident+"dAuction2/all_standing_market_offers/$"
@@ -22,7 +24,7 @@ u_refresh="^"+ident+"dAuction2/refresh/$"
 
 u_refresh="^"+ident+"dAuction2/refresh/$"
 u_refresh2="^"+ident+"dAuction2/refresh2/$"
-
+    # obsolete in this version (makes autonomous agents bid)
 u_refresh_Master="^"+ident_master+"dAuction2/refresh2/$"
 
 u_show_theory="^"+ident+"dAuction2/show_theory/$"

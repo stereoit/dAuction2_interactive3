@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'dAuction2'
+        # our app
 )
 
 MIDDLEWARE_CLASSES = (
@@ -53,7 +54,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'dAuction2.urls'
 
 WSGI_APPLICATION = 'dAuction2.wsgi.application'
-
+# ??? IDU: what is this WSGI???
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
