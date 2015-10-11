@@ -87,8 +87,8 @@ def createPlayer(g, id_in_group,role):
 def index_calculations(group_idd, id_in_group):
     # In this procedure all the calculations are done that are necessary to now the state of the auction
     # how many transactions have been done, how many offers are out.
-    # Note: NO offers are cleared in this procedure
-    
+    # Note: NO offers are cleared in this procedure.
+
     print("BEGIN index_calculations")
     group_id=int(group_idd)
     id_in_group=int(id_in_group)
