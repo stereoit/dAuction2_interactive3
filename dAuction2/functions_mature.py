@@ -1,5 +1,6 @@
-__author__ = 'MSIS'
-
+__author__ = 'SLVSTR'
+# These functions are mature in the sense that I think they function well and probably wont change
+# or correct them
 
 from dAuction2.models import Player, Group, Offer, Transaction, Voucher,Constants,Constants2, SD
 import random, string
@@ -24,26 +25,34 @@ def transpose_pad(sellPrice,buyPrice):
     # therefore, if sellPrice is shorter than buyPrice: sellPrice is padded with 999999s until it has equal length
     # therefore, if buyPrice is shorter than sellPrice: buyPrice is padded with -1s until it has equal length
     # To avoid unnecessary long strings, I check if there is padding for the larger vector, and if so,
-    #  it is stripped
+    # it is stripped
+    # The correct padding takes up all the code lines here, the transposition is done in one line (the last one)
 
     diff= len(sellPrice) - len(buyPrice)
-    #print(diff)
     if diff!=0:
+        # if the two vectors are not of equal length, they have to be padded (or excess padding must be stripped)
         if diff < 0:                                # which one is the longest
-            buyPrice = [aa for aa in buyPrice if aa !=-1]     # buyPrice is the longest, so first try and strip buyPrice
-            diff2= len(sellPrice) - len (buyPrice)                 # check if buyPrice is still longer
+            # buyPrice is the longest, so first try and strip buyPrice
+            buyPrice = [aa for aa in buyPrice if aa !=-1]
+            diff2= len(sellPrice) - len (buyPrice)
             if diff2 < 0:
-                sellPrice.extend([(999999,999999,999999)]*abs(diff2))           # buyPrice is still longer, so sellPrice is padded
+                # check if buyPrice is still longer
+                sellPrice.extend([(999999,999999,999999)]*abs(diff2))
+                    # buyPrice is still longer, so sellPrice is padded
             else:
                 raise ValueError('transposepad failed for diff<0')
         else:
+            # sellPrice is the longest, so first try and strip sellPrice
             sellPrice = [aa for aa in sellPrice if aa != 999999]
             diff2= len(sellPrice) - len (buyPrice)
             if diff2 > 0:
+                # check if sellPrice is still longer
                 buyPrice.extend([(-1,-1,-1)]*abs(diff2))
+                    # sellPrice is still longer, so sellPrice is padded
             else:
                 raise ValueError('transposepad failed for diff>0')
     return(list(zip(*[sellPrice,buyPrice])))
+        # the expression here does the transposition
 
 
 
@@ -76,8 +85,8 @@ def doubley(x):
 
 
 def doublex(x):
-#  this function doubles a list with x coordinates for the graph. The doubling is done so that the graph will have
-#  a step form.
+    #  this function doubles a list with x coordinates for the graph. The doubling is done so that the graph
+    #  will have a step form.
     if x:
         qwx=[x for pair in zip(x,x) for x in pair]
         qwx.insert(0,0)
@@ -131,7 +140,9 @@ def median_value10(queryset,term):
 
 
 def copy_offer(c,p, first):
-    # creates a copy of the offer. This one will contain the remaining units
+    # creates a copy of the offer (real copy, not a damn second pointer to the same object).
+    # This one will contain the remaining units
+    # I think there is a standard Python command for this, but I somehow didnt manage to get it done
     print("BEGIN copy_offer(c,p, first):",c,p,first)
     c2 = Offer(player=p,group=c.group,parentId=c.id)
     c2.priceOriginal = c.priceOriginal
@@ -184,21 +195,25 @@ def set_voucher(p,first_player,first,unitsCleared):
     # For Producers (Retailers), vouchers are used as they sell (buy).
     # For Producers (Retailers), vouchers are released if they buy (sell).
     # If a Producer (Retailers) buys (sells) more than he has sold (bought) extra vouchers are created for him
-    #
+    # #p is the player that is treated, #first_player is the best match (the first in the list)
+    # #first is the offer of #first_player, #unitsCleared is the number of units in the transaction between
+    # #p and #first_player
 
-    # first treat the vouchers of the present bidder (p)
+
+# first treat the vouchers of the present bidder (#p)
     print("BEGIN set_voucher(p,first,unitsCleared):",p,first,unitsCleared)
-    #first_player=first.player
     tel_p=Voucher.objects.filter(player=p, used=True).count()
     tel_all_p=Voucher.objects.filter(player=p).count()
     negative_p=35-tel_all_p
-        # negative_p gives the number of extra vouchers he has (generally 0, but can be positive with
-        # speculation
+        # negative_p gives the number of extra vouchers player #p has
+        # (generally 0, but can be positive with speculation
     #print ("tel_p",tel_p)
     #print ("tel_all_p",tel_all_p)
     tel_f=Voucher.objects.filter(player=first_player, used=True).count()
     tel_all_f=Voucher.objects.filter(player=first_player).count()
     negative_f=35-tel_all_f
+        # negative_f gives the number of extra vouchers player #first_player has
+        # (generally 0, but can be positive with speculation
 
     # now, if p is a REtailer BUYing or a PRoducer SELLing, usual treatment - make units used
     # if p is a REtailer SELLing or a PRoducer BUYing, the reverese treatment - "unuse" units
@@ -227,9 +242,9 @@ def set_voucher(p,first_player,first,unitsCleared):
         set_total_cost_value(p,vv.value_cum)
         #print("AFTER set_total_cost_value(p,vv.value_cum)")
 
-        #  treat the vouchers of the counterparty (first.player)
+# treat the vouchers of the counterparty (#first_player)
         print("2nd... setvoucher call")
-        #ToDo
+
         #must check if it is standard case for first_player or not
         if (first_player.role=="RE" and first.type=="BUY") or (first_player.role=="PR" and first.type=="SELL"):
             # thus fp is a REtailer, and bought
@@ -286,8 +301,6 @@ def set_voucher(p,first_player,first,unitsCleared):
             print("reversed case for for first_player")
             v=create_and_cut_vouchers(first_player,p,first,unitsCleared)
             set_total_cost_value(first_player,v.value_cum-v.value)
-
-
     print("END set_voucher(p,first,unitsCleared):",p,first,unitsCleared)
 
 
@@ -333,6 +346,10 @@ def set_total_cost_value(p,value_cum):
 
 
 def clear_offer_smaller(smaller,larger,first):
+    # procedure sets the values correctly after a transaction
+    # remember that if my offer reacts to a standing offer (an offer that was made earlier than mine),
+    # then the transaction price is determined by the offer price of that standing order. If my offer
+    # was standing and a new offer matched to mine, then the transaction price is set by my offer price
     print("BEGIN clear_offer_smaller(smaller,larger,first):",smaller,larger,first)
     smaller.cleared=True
     smaller.counterOffer_id=larger.id
@@ -345,6 +362,11 @@ def clear_offer_smaller(smaller,larger,first):
 
 
 def clear_offer_larger(smaller,larger,first):
+    # procedure sets the values correctly after a transaction
+    # remember that if my offer reacts to a standing offer (an offer that was made earlier than mine),
+    # then the transaction price is determined by the offer price of that standing order. If my offer
+    # was standing and a new offer matched to mine, then the transaction price is set by my offer price
+
     print("BEGIN clear_offer_larger(smaller,larger,first):",smaller,larger,first)
     larger.cleared=True
     larger.counterOffer_id=smaller.id
@@ -357,7 +379,8 @@ def clear_offer_larger(smaller,larger,first):
 
 
 def create_transaction(c,first):
-# this creates a transaction. "larger" is the offer with the larger price, "smaller" with the smaller price.
+    # this creates a transaction. #c is the present offer, #first is the best standing offer with which it can
+    # be matched first (first in the list of possible matches)
     print("BEGIN create_transaction(c,first):",c,first)
     t = Transaction()
     t.group=c.group

@@ -233,7 +233,7 @@ def index_calculations(group_idd, id_in_group):
     lastOfferST = myOffersST.first()
 
 
-
+# Setting values right for the Bokeh graphs
     print("Drawing the transactions figure")
     #Drawing the transactions figure
     pl = figure()
@@ -289,7 +289,7 @@ def index_calculations(group_idd, id_in_group):
 
 
 def D_S_analysis():
-    # calculate D-S analyzis
+    # calculate Demand-Suppy (D-S) analyzis to show the theoretical predictions
     # ONLY NEEDS TO BE DONE ONCE - SHOULD BE MOVED SOMEWHERE
     print("def D_S_analysis()  CALLED ........................................................")
     #g=getGroup(group_id)

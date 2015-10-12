@@ -188,9 +188,9 @@ class Transaction(models.Model):
         # a seller and a buyer
     group = models.ForeignKey('Group', related_name='group',null=True)
     sellerOffer = models.ForeignKey('Offer', related_name='sellerOffer',null=True)
-        # shows what the seller offered (doesnt need to be the same as the price
+        # transaction is owned by the specific offer of the seller (do I really need this???)
     buyerOffer = models.ForeignKey('Offer', related_name='buyerOffer',null=True)
-        # shows what the buyer offered (doesnt need to be the same as the price
+        # transaction is owned by the specific offer of the buyer (do I really need this???)
     price = models.IntegerField(default=0)
         # the price for which the units are traded, is either equal to sellerOffer or to buyerOffer
     buyerPrice= models.IntegerField(default=0)

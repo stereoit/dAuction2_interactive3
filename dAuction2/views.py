@@ -19,20 +19,14 @@ import time
 from django.db.models import Avg,Sum
 from dAuction2.functions import *
 from dAuction2.functions_mature import *
-
-
-
-###########################################################
-# "real" views
 import random, string
+
 
 def initialize(request):
     # DEM
-    # create the main player - Producer
-    # then in addition 4 more producers
-    # and 5 retailers
-    #state = Constants2.objects.get_or_create(id=1)[0]
-    #print ("state",state)
+    # create the players a total of producers equal to #Constants.PR_number and a total of retailers equal to
+    # #Constants.RE_number
+
 
     #create codes for the other players
     #Constants.PR_number, Constants.RE_number
@@ -40,21 +34,18 @@ def initialize(request):
 
     if not Constants.init_started:
     #if True:
-        Constants.init_started=True
+        Constants.init_started=True # to assure the process is started only once
         print ("Constants.init_started",Constants.init_started)
-        #state.save()
         Voucher.objects.all().delete()
         Transaction.objects.all().delete()
         Offer.objects.all().delete()
         Player.objects.all().delete()
         Group.objects.all().delete()
         group_id=int(1)
-        #id_in_group=int(id_in_group)
-        # we need to check if there are player objects already
+            # everything is deleted to clean up
         g=getGroup(group_id)
         for i in range(1,Constants.PR_number+1):
             #random.seed(i)
-
             createPlayer(g,i,"PR") # 5 producers, with index i={1,2}
         for i in range(Constants.PR_number+1,Constants.PR_number+Constants.RE_number+1):
             #random.seed(i)
