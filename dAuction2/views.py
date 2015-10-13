@@ -23,14 +23,11 @@ import random, string
 
 
 def initialize(request):
-    # DEM
-    # create the players a total of producers equal to #Constants.PR_number and a total of retailers equal to
+    # This is the view that will generate the first view
+    # it will give the boss/master view
+    # It create the players a total of producers equal to #Constants.PR_number and a total of retailers equal to
     # #Constants.RE_number
 
-
-    #create codes for the other players
-    #Constants.PR_number, Constants.RE_number
-    #group_id, id_in_group=decode(codename)
 
     if not Constants.init_started:
     #if True:
@@ -55,7 +52,9 @@ def initialize(request):
         #'offers':offer_listST
         player_list = Player.objects.filter(id_in_group__lt=99).order_by('id')
         Constants.script2, Constants.div2,Constants.sd_price_max,Constants.sd_price_min,Constants.sd_units=D_S_analysis()
-    #what?
+            # does immediately the demand-supply analysis. This results in 5 values (the first are
+            # javascripts for the bokeh graph, the others numbers to be shown if the theoretical analysis toggle
+            # is pressed by the boss
 
     else:
         time.sleep(1)
@@ -65,13 +64,10 @@ def initialize(request):
         return request
     Constants.init_started=False
     return render(request, 'dAuction2/code_assign.html', context={"player_list":player_list})
-    # ToDo: the page still shows "initialize" and refresh creates new codes. How to make this a new page?
-    #return HttpResponseRedirect(reverse('code_assignment'))
 
 
 
 
-#def code_assignment:
 
 def Admin_page1(request):
     player_list = Player.objects.all().order_by('id')
@@ -82,8 +78,8 @@ def Admin_page1(request):
 
 
 
-#def index(request, group_id, id_in_group):
 def index(request, codename):
+    # all calculations are done (by calling index_calculations)
     print("index called")
     if Constants.stop:
         print("Constants.stop",Constants.stop)
@@ -92,13 +88,12 @@ def index(request, codename):
     group_id, id_in_group=decode(codename)
     print("group_id, id_in_group",group_id, id_in_group)
     context2=index_calculations(group_id, id_in_group)
-    context = RequestContext(request, context2)
     return render(request,'dAuction2/spot_market/index.html', context= context2)
 
 
 def all_transactions(request,group_id, id_in_group):
-#def all_transactions(request,codename):
-#    group_id, id_in_group=decode(codename)
+    # ALL calculations are done (by calling index_calculations)
+    # results relevant for "all_transactions" box are returned
 
     context2=index_calculations(group_id, id_in_group)
     #print("all_trans called!")
@@ -106,21 +101,25 @@ def all_transactions(request,group_id, id_in_group):
 
 
 def all_standing_market_offers(request,group_id, id_in_group):
-    #print("all_stand called!")
-    #print("Connected player group id is:", group_id,)
-    #print("Connected player id in group is:", id_in_group,)
+    # ALL calculations are done (by calling index_calculations)
+    # results relevant for "all_standing_market_offers" box are returned
     context2=index_calculations(group_id, id_in_group)
     return render(request,'dAuction2/spot_market/all_standing_market_offers.html',context = context2)
 
 
 def my_standing_offer(request,group_id, id_in_group):
+    # ALL calculations are done (by calling index_calculations)
+    # results relevant for "my_standing_offer" box are returned
     context2=index_calculations(group_id, id_in_group)
-    #print("my_stand 3333333333333333333333333333!")
     return render(request,'dAuction2/spot_market/my_standing_offer.html',context= context2)
 
+
 def refresh(request,group_id, id_in_group):
-#def refresh(request,codename):
-#    group_id, id_in_group=decode(codename)
+    # ALL calculations are done (by calling index_calculations)
+    # ALL results are put into the "dummy" html page content_refresh
+    # This page gets rendered, and the JQUERY on the clientside picks out the info and pastes it into
+    # the present page
+
     print("BEGIN refresh!")
     context2=index_calculations(group_id, id_in_group)  # index_calculations calculates the up-to-date state
 
@@ -128,6 +127,10 @@ def refresh(request,group_id, id_in_group):
     return render(request,'dAuction2/spot_market/content_refresh.html',context= context2)
 
 def show_theory(request,group_id, id_in_group):
+    # Toggles showing and hiding the theoretical analysis
+    # Simply the variable Constants.show_theory is toggled to the opposite state. If it is on, the relevant
+    # calculations are made. The theoretical analysis will now be shown after the next refresh.
+
     print("*********************************Show theory", Constants.show_theory)
     Constants.show_theory=not Constants.show_theory
     if Constants.show_theory:
@@ -138,8 +141,11 @@ def show_theory(request,group_id, id_in_group):
 
 
 def stop(request,group_id, id_in_group):
-    print("*********************************Stop", Constants.stop)
+    # Toggles the auction on or off
+    # Simply the variable Constants.stop_theory is toggled to the opposite state. If it is on, the relevant
+    # calculations are made. The theoretical analysis will now be shown after the next refresh.
 
+    print("*********************************Stop", Constants.stop)
     Constants.stop=not Constants.stop
     if Constants.stop:
         Constants.show_theory=True
@@ -149,10 +155,9 @@ def stop(request,group_id, id_in_group):
 
 
 def refresh2(request,group_id, id_in_group):
-    # DEM
-    # remember: 1-2 are PR, 3-4 are RE
-    # choose at random a player 2:1 odd a retailer
-    # let make a bid
+    # These are the autonomous agents (robots) bidding
+    # THIS HAS BEEN TURNED OFF FOR THIS APPLICATION!
+
     if Constants.stop:
         return request
     print("refresh2 called")
@@ -262,6 +267,8 @@ def refresh2(request,group_id, id_in_group):
 
 
 def cancel_so(request,group_id, id_in_group):
+    # cancels the last outstanding offer a player made
+
     if Constants.stop:
         return request
     print("cancel called")
@@ -279,15 +286,13 @@ def cancel_so(request,group_id, id_in_group):
 
 
 def set_offer(request,group_id, id_in_group,valUnits,valPrice,valType):
-    # a player makes an offer. The offer is first created and then checked against the existing offers and matched and cleared if
+    # When this procedure is called, it means a player makes an offer and sends, except for his identity,
+    # info on the number of units, the price and the type (Sell or Buy).
+    # The offer is first created and then checked against the existing offers and matched and cleared if
     # possible
+    # THIS IS THE ONLY POINT WHERE MATCHING IS DONE. IF HERE THE PROCEDURE MESSES UP AND AN OFFER "ESCAPES"
+    # MATCHING, THE AUCTION WILL NOT BE EXECUTED CORRECTLY!
 
-    #if Constants.stop:
-    #    return request
-
-    #state = Constants2.objects.get_or_create(id=1)[0]
-    #print("state.setOffer_started", state.setOffer_started)
-    #print ("state",state)
 
     #if not Constants.setOffer_started:
     if True:
@@ -464,6 +469,7 @@ def set_offer(request,group_id, id_in_group,valUnits,valPrice,valType):
             return render(request,'dAuction2/spot_market/my_standing_offer2.html', context = context2)
         else:
             print("is not me, no render! Is:",id_in_group)
+                # For the version with robots, obsolete here
             return request # DEM: must still be calculated context
     else:
         print("presently a set_offer procedure is running, so no others can be processed:",id_in_group)
