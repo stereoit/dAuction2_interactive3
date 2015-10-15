@@ -1,0 +1,15 @@
+    <div class="title">My standing offer</div>
+        <table style="width:300px">
+            <tr class="units"> <td>id </td>   <td>price </td> <td>units </td><td> SELL or BUY </td></tr>
+            {% if lastOffer.type == "SELL" %}<tr class= "SELL"> {% else %}<tr class="BUY"> {% endif %}
+                <td> {{ lastOffer.id }} </td>
+                <td> {{ lastOffer.priceOriginal }} </td>
+                <td> {{ lastOffer.unitsAvailable }} </td>
+                <td> {{ lastOffer.type }} </td>
+            </tr>
+
+            <input type="hidden" id= "offer_id" name="offer_id" value="{{ offer.id }}">
+            <tr>
+                <th colspan="4"></th>
+            </tr>
+        </table>
