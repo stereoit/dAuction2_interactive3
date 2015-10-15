@@ -6,11 +6,6 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 
-import random
-# </standard imports>
-from random import randint
-import random
-
 
 #???IDU= I Don't Understand - perhaps you can clarify.
 
