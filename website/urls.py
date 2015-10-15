@@ -3,10 +3,6 @@ from django.contrib import admin
 from django.conf import settings
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'dAuction2.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-
-    url(r'^admin/', include(admin.site.urls)),
     url(r'^$', include('dAuction2.urls')),
+    url(r'^admin/', include(admin.site.urls)),
 )
