@@ -3,10 +3,8 @@ Django settings for dAuction2 project.
 """
 import os
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-print (BASE_DIR)
-
+# BASEDIR is the folder where manage.py is
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)),'..'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'k#!q9vjjynr)aaqxam50f*pgzwt9cj3j#rkd^@^%r(air1w7f%'
@@ -24,7 +22,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'dAuction2'
+    'dAuction2',
+    'website'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -54,9 +53,9 @@ USE_TZ = True
 STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
+#STATICFILES_DIRS = (
+#    os.path.join(BASE_DIR, 'static'),
+#)
 
 
 TEMPLATES = [
