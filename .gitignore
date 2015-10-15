@@ -1,0 +1,11 @@
+*.pyc
+*.pyo
+*.project
+*.pydevproject
+lib/
+lib64/
+venv/
+.vagrant/
+.idea/
+Scripts/
+Lib/
