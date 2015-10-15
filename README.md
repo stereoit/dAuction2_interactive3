@@ -23,7 +23,7 @@ During installation select `Add python.exe to Path` last option, this will make
 it easier to work with Python. Also make sure `PIP` is selected, this is a
 package manager for python.
 
-### Install GIT 
+### Install GIT
 
 GIT is used for managing changes to the code. Obtain it from the [GIT
 Website](https://git-scm.com/download/win).
@@ -40,6 +40,12 @@ VirtualBox is used for provisioning and running virtual machines. Install from t
 
 Vagrant is a technology to simplify bootstraping the workflow with virtual
 environments.
+
+We are using Fedora/RedHat virtual machines inside Vagrant, add them to the
+vagrant stash:
+
+    $ vagrant box add fedora-22-cloud https://download.fedoraproject.org/pub/fedora/linux/releases/22/Cloud/x86_64/Images/Fedora-Cloud-Base-Vagrant-22-20150521.x86_64.vagrant-libvirt.box
+
 
 ### Optionally install PyCharm
 
@@ -87,4 +93,24 @@ With isolated project environmane one can install all python dependencies.
     (venv)~/C/w/dauction2 (code_cleanup) $ pip install -r requirements.txt
 
 
+## Vagrant on Fedora using libvrit
+
+If you are using Linux/Fedora for development, the VirtualBox provider is kinda
+slow. One can utilize fast KVM/libvirt technology.
+
+## Install vagrant libvirt plugin
+
+    $ sudo dnf install libvirt-devel libxslt-devel libxml2-devel libvirt-devel libguestfs-tools-c
+    $ vagrant plugin install vagrant-libvirt
+
+## Add Fedora KVM box into Vagrant
+
+    $ vagrant box add fedora-22-cloud https://download.fedoraproject.org/pub/fedora/linux/releases/22/Cloud/x86_64/Images/Fedora-Cloud-Base-Vagrant-22-20150521.x86_64.vagrant-virtualbox.box
+    $ vagrant box list
+
+## Use the libvirt provider when starting the box
+
+    $ vagrant up --provider=libvirt
+
+Rest is the same
 
