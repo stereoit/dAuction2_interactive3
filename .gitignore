@@ -5,7 +5,7 @@
 .vagrant/
 .idea/
 db.sqlite
-settings/local.py
+website/settings/local.py
 venv/
 Scripts/
 Lib/
