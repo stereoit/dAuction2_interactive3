@@ -23,7 +23,7 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.provision "DB setup file", type: "file", source: "deployment/create_db.sql", destination: "/tmp/create_db.sql"
-  config.vm.provision "DB pga file", type: "file", source: "deployment/pg_hba.conf", destination: "/tmp/pg_hba/conf"
+  config.vm.provision "DB pga file", type: "file", source: "deployment/pg_hba.conf", destination: "/tmp/pg_hba.conf"
 
 
   config.vm.provision "SW layer", type: "shell", inline: <<-SHELL
